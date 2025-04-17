@@ -3,9 +3,13 @@ pipeline {
     tools {
         maven 'Maven3.9.9'
     }
+    // environment {
+    //     // DOCKERHUB_CREDENTIALS = credentials('Docker')
+    // }
     environment {
-        DOCKERHUB_CREDENTIALS = credentials('Docker')
+        DOCKERHUB_CREDENTIALS = credentials('38707636-0ffd-422c-a20b-2d6bb729ce88')
     }
+
     stages {
         stage('Initialize') {
             steps {
