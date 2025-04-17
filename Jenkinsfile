@@ -1,11 +1,10 @@
 pipeline {
     agent any
+
     tools {
         maven 'Maven3.9.9'
     }
-    // environment {
-    //     // DOCKERHUB_CREDENTIALS = credentials('Docker')
-    // }
+
     environment {
         DOCKERHUB_CREDENTIALS = credentials('38707636-0ffd-422c-a20b-2d6bb729ce88')
     }
@@ -31,14 +30,15 @@ pipeline {
                 sh 'mvn clean install'
             }
         }
+
         stage('Building API Image') {
             steps {
                 script {
-                    withCredentials([usernamePassword(credentialsId: 'Docker',
-                                                      usernameVariable: 'DOCKER_USER',
-                                                      passwordVariable: 'DOCKER_PASS')]) {
+                    withCredentials([usernamePassword(credentialsId: '38707636-0ffd-422c-a20b-2d6bb729ce88',
+                                                  usernameVariable: 'DOCKER_USER',
+                                                  passwordVariable: 'DOCKER_PASS')]) {
                         sh """
-                            echo "\$DOCKER_PASS" | docker login -u "\$DOCKER_USER" --password-stdin
+                            echo \"\$DOCKER_PASS\" | docker login -u \"\$DOCKER_USER\" --password-stdin
                         """
                     }
                     def imageName = "atharvatheurkar/student-survey-app:${env.BUILD_TIMESTAMP}"
@@ -47,6 +47,7 @@ pipeline {
                 }
             }
         }
+
         stage('Pushing Image to DockerHub') {
             steps {
                 script {
@@ -54,6 +55,7 @@ pipeline {
                 }
             }
         }
+
         stage('Deploying to Rancher') {
             steps {
                 script {
